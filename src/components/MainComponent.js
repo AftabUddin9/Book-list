@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import bookList from '../assets/books.js'
 import BookList from './lists/BookList.js';
+import NewBook from './representational/NewBook.js';
+import { Routes, Route, NavLink } from 'react-router-dom';
+import BookDetail from './representational/BookDetail.jsx';
+import { Navigate } from 'react-router-dom';
+// import SignIn from './auth/SignIn.jsx';
+// import PrivateRoute from './auth/PrivateRoute.jsx';
 
 class MainComponent extends Component {
     // state
@@ -11,9 +17,15 @@ class MainComponent extends Component {
     // version 16.8
     state = {
         books: bookList,
-        showBooks: true
+        selectedBook: null,
+        // showBooks: true
 
         // otherProp: "I am some other Property"
+    };
+
+    selectedBookHandler = (bookId) => {
+        const book = this.state.books.filter((book) => book.id === bookId)[0];
+        this.setState({ selectedBook: book, });
     };
 
     // changeBookState = (newBookName) => {
@@ -27,68 +39,93 @@ class MainComponent extends Component {
     //   });
     // }
 
-    deleteBookState = (index) => {
-        // const books = this.state.books.slice();
-        // const books = this.state.books.map(item => item);
-        const books = [...this.state.books];
-        books.splice(index, 1);
-        this.setState({ books: books });
-    };
+    // deleteBookState = (index) => {
+    //     // const books = this.state.books.slice();
+    //     // const books = this.state.books.map(item => item);
+    //     const books = [...this.state.books];
+    //     books.splice(index, 1);
+    //     this.setState({ books: books });
+    // };
 
-    toggleBooks = () => {
-        this.setState({ showBooks: !this.state.showBooks });
-    }
+    // toggleBooks = () => {
+    //     this.setState({ showBooks: !this.state.showBooks });
+    // }
 
-    changeWithInputState = (event, index) => {
-        const book = {
-            ...this.state.books[index]
-        }
+    // changeWithInputState = (event, index) => {
+    //     const book = {
+    //         ...this.state.books[index]
+    //     }
 
-        book.bookName = event.target.value;
-        const books = [...this.state.books];
-        books[index] = book;
-        this.setState({ books: books });
-        // this.setState({
-        //   books: [
-        //     { bookName: event.target.value, writer: "George Orwell" },
-        //     { bookName: "The Da Vinci Code", writer: "Dan Brown" },
-        //     { bookName: "Metamorphosis", writer: "Frans Kafka" }
-        //   ]
-        // });
-    }
+    //     book.bookName = event.target.value;
+    //     const books = [...this.state.books];
+    //     books[index] = book;
+    //     this.setState({ books: books });
+    //     // this.setState({
+    //     //   books: [
+    //     //     { bookName: event.target.value, writer: "George Orwell" },
+    //     //     { bookName: "The Da Vinci Code", writer: "Dan Brown" },
+    //     //     { bookName: "Metamorphosis", writer: "Frans Kafka" }
+    //     //   ]
+    //     // });
+    // }
 
     render() {
         // for applying CSS
         // write JS object, React will convert into CSS
-        const style = {
-            border: "1px solid red",
-            borderRadius: "5px",
-            backgroundColor: "black",
-            color: "white",
-        };
+        // const style = {
+        //     border: "1px solid red",
+        //     borderRadius: "5px",
+        //     backgroundColor: "black",
+        //     color: "white",
+        // };
 
         // const booksState = this.state.books;
 
-        let books = null;
-        if (this.state.showBooks) {
-            books = <BookList
-                books={this.state.books}
-                deleteBookState={this.deleteBookState}
-                changeWithInputState={this.changeWithInputState} />;
-        }
-
+        const books = <BookList
+            books={this.state.books}
+            selectedBookHandler={this.selectedBookHandler} />;
 
         return (
             <div className="App">
-                <h1 style={style}>Book List</h1>
-                <button onClick={this.toggleBooks}>Toggle Books</button>
-                {books}
+                <nav className='nav-bar'>
+                    <ul>
+                        {/* <li>
+                            <NavLink to='/'>Sign In</NavLink>
+                        </li> */}
+                        <li>
+                            <NavLink to='/'>Home</NavLink>
+                        </li>
+                        <li>
+                            <NavLink to='/new-book'>New Book</NavLink>
+                        </li>
+                    </ul>
+                </nav>
+                {/* <h1 style={style}>Book List</h1> */}
+                {/* <button onClick={this.toggleBooks}>Toggle Books</button>
+                {books} */}
                 {/* <button onClick={() => this.changeBookState("1974")}>Change State</button>
         <input type="text" onChange={this.changeWithInputState} /> */}
                 {/* {books} */}
                 {/* <Book bookName={this.state.books[0].bookName} writer={this.state.books[0].writer} inputName={this.changeWithInputState} />
         <Book bookName={this.state.books[1].bookName} writer={this.state.books[1].writer} />
         <Book bookName={this.state.books[2].bookName} writer={this.state.books[2].writer} change={this.changeBookState.bind(this, "999")} /> */}
+
+                <Routes>
+                    {/* <Route path='/' element={<SignIn />}></Route> */}
+
+                    <Route path='/' element={<Navigate to="/books/" />}></Route>
+                    <Route path='/books' element={books}></Route>
+                    <Route path='/new-book' element={<NewBook />}></Route>
+                    <Route path='/:id' element={<BookDetail book={this.state.selectedBook} />}></Route>
+
+                    {/* for private/guard route
+                    <Route element={<PrivateRoute />}>
+                        <Route path='/books' element={books}></Route>
+                        <Route path='/new-book' element={<NewBook />}></Route>
+                    </Route> */}
+
+                </Routes>
+
             </div>
         );
     }

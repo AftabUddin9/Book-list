@@ -1,13 +1,14 @@
 import React from 'react';
 import '../../stylesheets/Book.css';
+import { Link } from 'react-router-dom';
 
-const Book = (props) => {
+const Book = ({ book, selectedBookHandler }) => {
     return (
-        <div className="Book">
-            <h3 onClick={props.delete}>Book: {props.bookName}</h3>
-            <h4>Writer: {props.writer}</h4>
-            <input type="text" onChange={props.inputName} value={props.bookName} />
+        <div className="Book" onClick={() => selectedBookHandler(book.id)}>
+            <h3>Book: {book.bookName}</h3>
+            <h4>Writer: {book.writer}</h4>
         </div>
+
     );
 }
 
